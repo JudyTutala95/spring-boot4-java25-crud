@@ -1,0 +1,69 @@
+### Testa API:t direkt från IntelliJ IDEA eller VS Code (REST Client-tillägget).
+### Starta appen först: ./mvnw spring-boot:run
+
+### Lista böcker (sida 0, 20 st, sorterat på titel)
+GET http://localhost:8080/api/books
+
+### Sök: fantasy-böcker med "earth" i titeln, nyaste först
+GET http://localhost:8080/api/books?genre=FANTASY&title=earth&sort=publishedYear,desc
+
+### Hämta en bok – API-version 1 (standard)
+GET http://localhost:8080/api/books/3
+
+### Hämta en bok – API-version 2 (nästlad författare, pris med valuta)
+GET http://localhost:8080/api/books/3
+API-Version: 2
+
+### Skapa en bok
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{
+  "title": "Mio, min Mio",
+  "isbn": "978-91-29-65735-0",
+  "price": 139.00,
+  "publishedYear": 1954,
+  "genre": "CHILDREN",
+  "authorId": 1
+}
+
+### Uppdatera en bok (version måste matcha senast lästa version)
+PUT http://localhost:8080/api/books/1
+Content-Type: application/json
+
+{
+  "title": "Pippi Långstrump (jubileumsutgåva)",
+  "isbn": "9789129697711",
+  "price": 199.00,
+  "publishedYear": 1945,
+  "genre": "CHILDREN",
+  "authorId": 1,
+  "version": 0
+}
+
+### Ta bort en bok
+DELETE http://localhost:8080/api/books/2
+
+### Valideringsfel → 400 med "errors"
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{ "title": "", "isbn": "123", "price": -1, "publishedYear": 3000 }
+
+### Okänd bok → 404 Problem Details
+GET http://localhost:8080/api/books/999
+
+### Rekommendationer – titta i loggen hur @Retryable försöker igen
+GET http://localhost:8080/api/books/recommendations?genre=SCIENCE_FICTION
+
+### Författare
+GET http://localhost:8080/api/authors
+
+### Skapa författare
+POST http://localhost:8080/api/authors
+Content-Type: application/json
+
+{ "name": "Tove Jansson", "birthYear": 1914 }
+
+### Hälsa
+GET http://localhost:8080/actuator/health
